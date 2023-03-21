@@ -1,21 +1,19 @@
-"""
-This module contains the Node class.
-
-A node class is a class that represents a node in a graph.
-Each node have a name, a list of children nodes, a list of parents nodes and Object to set de value of the node.
-"""
-
-
 class Node:
-    def __init__(self, name: str, values: dict, parents: list, children: list):
+    """
+    A node class is a class that represents a node in a graph.
+    Each node have a name, a list of children nodes, a list of parents nodes and Object to set de value of the node.
+    """
+
+    def __init__(self, name: str, values: dict, parents: list, children: list, number_states: int):
         self.name = name
         self.values = values
         self.parents = parents
         self.children = children
-        self.lambda_value = None
-        self.lambda_message = None
-        self.pi_messages = None
-        self.pi_value = None
+        self.number_states = number_states
+        self.lambda_value = {}  # Dict with the values of all lambda value: EX: {a1: 1, a2: 1, a3: 1}
+        self.lambda_message = {}  # Dict with the values of all lambda message: EX: {a1: 1, a2: 1, a3: 1}
+        self.pi_messages = {}  # Dict with the values of all pi message: EX: {a1: 1, a2: 1, a3: 1}
+        self.pi_value = {}  # Dict with the values of all pi value: EX: {a1: 1, a2: 1, a3: 1}
 
     def get_name(self) -> str:
         return self.name
@@ -50,16 +48,27 @@ class Node:
         return self.children
 
     def get_lambda_value(self):
-        return self.lambda_value
+        res = "Lambda Values:[\n"
+        for i in range(self.number_states):
+            res += "\t" + self.name+str(i) + ": " + str(self.lambda_value.get(self.name + str(i))) + "\n"
+        res += "]"
+        return res
 
     def get_lambda_message(self):
-        return self.lambda_message
+        res = "Lambda Message[\n"
+        for i in range(self.number_states):
+            res += "\t" + self.name+str(i) + ": " + str(self.lambda_message.get(self.name + str(i))) + "\n"
+        res += "]"
+        return res
 
     def get_pi_messages(self):
-        return self.pi_messages
+        pass
 
     def get_pi_value(self):
-        return self.pi_value
+        pass
+
+    def get_number_states(self):
+        return self.number_states
 
     def set_name(self, name: str):
         self.name = name
@@ -74,22 +83,17 @@ class Node:
         self.children = children
 
     def set_lambda_value(self, lambda_value):
-        self.lambda_value = lambda_value
+        self.lambda_value.update(lambda_value)
 
     def set_lambda_message(self, lambda_message):
-        self.lambda_message = lambda_message
+        self.lambda_message.update(lambda_message)
 
     def set_pi_messages(self, pi_messages):
-        self.pi_messages = pi_messages
+        self.pi_messages.update(pi_messages)
 
     def set_pi_value(self, pi_value):
-        self.pi_value = pi_value
-
-
-
-
+        self.pi_value.update(pi_value)
 
     def __str__(self):
         return "Node: " + self.get_name() + " Value: " + str(self.get_values()) + " Children: " + str(
-            self.get_parents_string()) + " Parents: " + str(self.get_children_string())
-
+            self.get_children_string()) + " Parents: " + str(self.get_parents_string())
