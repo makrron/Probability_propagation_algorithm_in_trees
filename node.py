@@ -54,18 +54,27 @@ class Node:
         res += "]"
         return res
 
-    def get_lambda_message(self):
-        res = "Lambda Message[\n"
+    def get_lambda_message(self):  # {B(a1): 1, B(a2): 1, B(a3): 1..... | {str(child(parent)): int(value)}
+        if len(self.get_parents()) != 0:
+            res = "Lambda Message[\n"
+            for parent in self.parents:
+                for j in range(parent.number_states):
+                    res += "\t" + self.name + "(" + parent.get_name() + str(j) + ")" + ": " + \
+                           str(self.lambda_message.get(self.name + "(" + parent.get_name() + str(j) + ")")) + "\n"
+                res += "]"
+            return res
+        else:
+            return "This node is a root node"
+
+    def get_pi_messages(self):  # TODO: Change this to get the pi message of a specific node
+        return self.pi_messages
+
+    def get_pi_value(self):  # TODO: Change this to get the pi value of a specific node
+        res = "Pi Values[\n"
         for i in range(self.number_states):
-            res += "\t" + self.name+str(i) + ": " + str(self.lambda_message.get(self.name + str(i))) + "\n"
+            res += "\t" + self.name + str(i) + ": " + str(self.pi_value.get(self.name + str(i))) + "\n"
         res += "]"
         return res
-
-    def get_pi_messages(self):
-        pass
-
-    def get_pi_value(self):
-        pass
 
     def get_number_states(self):
         return self.number_states
@@ -95,5 +104,5 @@ class Node:
         self.pi_value.update(pi_value)
 
     def __str__(self):
-        return "Node: " + self.get_name() + " Value: " + str(self.get_values()) + " Children: " + str(
+        return "Node: " + self.get_name() + " | Values: " + str(self.get_values()) + " \n\t\tChildren: " + str(
             self.get_children_string()) + " Parents: " + str(self.get_parents_string())
